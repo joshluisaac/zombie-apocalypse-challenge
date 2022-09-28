@@ -1,0 +1,1 @@
+./gradlew clean build shadowJar jacocoTestReport && java -jar -DrequestFile="request.json"  build/libs/zombie-apocalypse-challenge-1.0-SNAPSHOT-all.jar

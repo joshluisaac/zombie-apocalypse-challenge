@@ -1,0 +1,14 @@
+{
+  "moves": "D",
+  "gridSize": 4,
+  "initialZombiePosition": {
+    "x": 3,
+    "y": 1
+  },
+  "initialCreaturePosition": [
+    {
+      "x": 1,
+      "y": 3
+    }
+  ]
+}

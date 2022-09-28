@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="109.5" y="45.0">au.com.ailo.zombie.apocalypse.MovementExpression</node>
+    <node x="-92.5" y="108.0">au.com.ailo.zombie.apocalypse.handler.RequestHandler</node>
+    <node x="-92.0" y="45.0">au.com.ailo.zombie.apocalypse.input.InputDispatcher</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="au.com.ailo.zombie.apocalypse.input.InputDispatcher" target="au.com.ailo.zombie.apocalypse.handler.RequestHandler" relationship="CREATE">
+      <point x="0.0" y="14.0" />
+      <point x="0.0" y="-14.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Compact" zoom="1.0" showDependencies="true" x="515.5" y="57.0" />
+  <SelectedNodes>
+    <node>au.com.ailo.zombie.apocalypse.handler.RequestHandler</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Inner Classes</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
