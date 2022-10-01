@@ -1,11 +1,14 @@
 package au.com.ailo.zombie.apocalypse.handler;
 
+import static au.com.ailo.zombie.apocalypse.utils.Utils.printer;
+
 import au.com.ailo.zombie.apocalypse.types.Coordinate;
 import au.com.ailo.zombie.apocalypse.types.Direction;
 import au.com.ailo.zombie.apocalypse.types.IGrid;
 import au.com.ailo.zombie.apocalypse.types.Tuple;
 import java.util.List;
 import java.util.Queue;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -22,14 +25,16 @@ public class RequestHandler {
   public void handle(List<Direction> moves) {
     while (!zombieQueue.isEmpty()) {
       Coordinate zombiePosition = zombieQueue.poll();
+      String zombieId = getZombieId();
       AtomicReference<Coordinate> position = new AtomicReference<>(zombiePosition);
-      moves.forEach(move -> handleMoves(move, position));
-      System.out.println();
+      moves.forEach(move -> handleMoves(move, position, zombieId));
+      printer("");
       grid.zombieLocations().add(position.get());
     }
   }
 
-  public void handleMoves(Direction direction, AtomicReference<Coordinate> position) {
+  public void handleMoves(
+      Direction direction, AtomicReference<Coordinate> position, String zombieId) {
 
     Coordinate currentPosition = position.get();
 
@@ -41,10 +46,10 @@ public class RequestHandler {
         .accept(currentPosition);
 
     position.set(currentPosition);
-    logLocation(currentPosition);
+    logLocation(currentPosition, zombieId);
 
     if (grid.hasCreature(currentPosition)) {
-      logInfection(currentPosition);
+      logInfection(currentPosition, zombieId);
       Coordinate infectedCoordinate = Coordinate.create(currentPosition);
       zombieQueue.add(infectedCoordinate);
       grid.infectCreature(currentPosition);
@@ -79,22 +84,18 @@ public class RequestHandler {
     return new Tuple<>(predicate, coordinateConsumer);
   }
 
-  private static void logInfection(Coordinate currentPosition) {
-    System.out.println(
+  private static void logInfection(Coordinate currentPosition, String zombieId) {
+    printer(
         String.format(
-            "Zombie 0 infected creature at (%d,%d)",
-            currentPosition.getX(), currentPosition.getY()));
+            "Zombie %s infected creature at (%d,%d)",
+            zombieId, currentPosition.getX(), currentPosition.getY()));
   }
 
-  private static void logLocation(Coordinate currentPosition) {
-    System.out.println(
-        "Zombie 0 moved "
-            + " to "
-            + "("
-            + currentPosition.getX()
-            + ","
-            + currentPosition.getY()
-            + ")");
+  private static void logLocation(Coordinate currentPosition, String zombieId) {
+    printer(
+        String.format(
+            "Zombie %s moved to (%d,%d)",
+            zombieId, currentPosition.getX(), currentPosition.getY()));
   }
 
   private void goDown(Coordinate currentPosition) {
@@ -119,5 +120,9 @@ public class RequestHandler {
     int nextX = currentPosition.getX() + 1;
     if (nextX > (grid.size() - 1)) nextX = 0;
     currentPosition.setX(nextX);
+  }
+
+  private static String getZombieId() {
+    return UUID.randomUUID().toString().split("-")[0];
   }
 }

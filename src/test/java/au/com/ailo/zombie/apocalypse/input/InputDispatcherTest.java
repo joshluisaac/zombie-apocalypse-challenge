@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import au.com.ailo.zombie.apocalypse.types.Coordinate;
-import au.com.ailo.zombie.apocalypse.types.Tuple;
+import au.com.ailo.zombie.apocalypse.types.Response;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -60,9 +60,9 @@ class InputDispatcherTest {
   @Test
   void dispatch_ShouldDispatch_RequestFile0() {
     System.setProperty("requestFile", "src/test/resources/requests/request0.json");
-    Tuple<List<Coordinate>, List<Coordinate>> result = InputDispatcher.dispatch();
-    List<Coordinate> zombies = result.getLeft();
-    List<Coordinate> creatures = result.getRight();
+    Response result = InputDispatcher.dispatch();
+    List<Coordinate> zombies = result.getZombieFinalPositions();
+    List<Coordinate> creatures = result.getCreatureFinalPositions();
     int zombieCount = zombies.size();
     int creatureCount = creatures.size();
     assertEquals(4, zombieCount);
@@ -77,9 +77,9 @@ class InputDispatcherTest {
   @Test
   void dispatch_ShouldDispatch_RequestFile1() {
     System.setProperty("requestFile", "src/test/resources/requests/request1.json");
-    Tuple<List<Coordinate>, List<Coordinate>> result = InputDispatcher.dispatch();
-    List<Coordinate> zombies = result.getLeft();
-    List<Coordinate> creatures = result.getRight();
+    Response result = InputDispatcher.dispatch();
+    List<Coordinate> zombies = result.getZombieFinalPositions();
+    List<Coordinate> creatures = result.getCreatureFinalPositions();
     int zombieCount = zombies.size();
     int creatureCount = creatures.size();
     assertEquals(4, zombieCount);

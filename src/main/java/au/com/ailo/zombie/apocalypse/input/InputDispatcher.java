@@ -7,7 +7,7 @@ import au.com.ailo.zombie.apocalypse.types.Coordinate;
 import au.com.ailo.zombie.apocalypse.types.Direction;
 import au.com.ailo.zombie.apocalypse.types.IGrid;
 import au.com.ailo.zombie.apocalypse.types.Request;
-import au.com.ailo.zombie.apocalypse.types.Tuple;
+import au.com.ailo.zombie.apocalypse.types.Response;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.util.ArrayDeque;
@@ -22,7 +22,7 @@ public class InputDispatcher {
 
   private static final String REQUEST_FILE = "requestFile";
 
-  public static Tuple<List<Coordinate>, List<Coordinate>> dispatch() {
+  public static Response dispatch() {
 
     final Map<String, String> jvmArgs = mapJvmArgs();
 
@@ -30,7 +30,7 @@ public class InputDispatcher {
 
     final ObjectMapper objectMapper = new ObjectMapper();
 
-    final Tuple<List<Coordinate>, List<Coordinate>> result = new Tuple<>();
+    final Response response = new Response();
 
     try {
       final Request request = objectMapper.readValue(new File(userRequestFile), Request.class);
@@ -53,13 +53,13 @@ public class InputDispatcher {
 
       requestHandler.handle(moves);
 
-      updateResult(result, grid);
+      updateResult(response, grid);
 
     } catch (Exception exception) {
       throw new RuntimeException(exception);
     }
 
-    return result;
+    return response;
   }
 
   private static void loadCreatures(Request request, IGrid grid) {
@@ -67,9 +67,9 @@ public class InputDispatcher {
     creaturePositions.forEach(grid::creaturefyCoordinate);
   }
 
-  private static void updateResult(Tuple<List<Coordinate>, List<Coordinate>> result, IGrid grid) {
-    result.setLeft(grid.zombieLocations());
-    result.setRight(grid.creatureLocations());
+  private static void updateResult(Response response, IGrid grid) {
+    response.setZombieFinalPositions(grid.zombieLocations());
+    response.setCreatureFinalPositions(grid.creatureLocations());
   }
 
   private static Map<String, String> mapJvmArgs() {

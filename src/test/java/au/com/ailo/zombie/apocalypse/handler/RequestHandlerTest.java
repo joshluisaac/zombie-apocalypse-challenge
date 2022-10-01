@@ -23,7 +23,8 @@ class RequestHandlerTest {
       int gridSize, String directionSymbol, Coordinate curr, Coordinate expected) {
     IGrid grid = new Grid(gridSize);
     RequestHandler requestHandler = new RequestHandler(grid, new ArrayDeque<>());
-    requestHandler.handleMoves(getDirectionBySymbol(directionSymbol), new AtomicReference<>(curr));
+    requestHandler.handleMoves(
+        getDirectionBySymbol(directionSymbol), new AtomicReference<>(curr), "testZombieId");
     assertEquals(expected, curr);
   }
 

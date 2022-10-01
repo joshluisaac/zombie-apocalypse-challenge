@@ -85,33 +85,39 @@ The request schema is a JSON formatted input to the application.
 
 Executing the above command will produce this output.
 ```log
-Zombie 0 moved  to (0,1)
-Zombie 0 infected creature at (0,1)
-Zombie 0 moved  to (0,2)
-Zombie 0 moved  to (1,2)
-Zombie 0 infected creature at (1,2)
-Zombie 0 moved  to (1,1)
-Zombie 0 infected creature at (1,1)
+Zombie 5cef994a moved to (0,1)
+Zombie 5cef994a infected creature at (0,1)
+Zombie 5cef994a moved to (0,2)
+Zombie 5cef994a moved to (1,2)
+Zombie 5cef994a infected creature at (1,2)
+Zombie 5cef994a moved to (1,1)
+Zombie 5cef994a infected creature at (1,1)
 
-Zombie 0 moved  to (1,1)
-Zombie 0 moved  to (1,2)
-Zombie 0 moved  to (2,2)
-Zombie 0 moved  to (2,1)
+Zombie c71c9d73 moved to (1,1)
+Zombie c71c9d73 moved to (1,2)
+Zombie c71c9d73 moved to (2,2)
+Zombie c71c9d73 moved to (2,1)
 
-Zombie 0 moved  to (2,2)
-Zombie 0 moved  to (2,3)
-Zombie 0 moved  to (3,3)
-Zombie 0 moved  to (3,2)
+Zombie c972ebf0 moved to (2,2)
+Zombie c972ebf0 moved to (2,3)
+Zombie c972ebf0 moved to (3,3)
+Zombie c972ebf0 moved to (3,2)
 
-Zombie 0 moved  to (2,1)
-Zombie 0 moved  to (2,2)
-Zombie 0 moved  to (3,2)
-Zombie 0 moved  to (3,1)
+Zombie 5aba7f9b moved to (2,1)
+Zombie 5aba7f9b moved to (2,2)
+Zombie 5aba7f9b moved to (3,2)
+Zombie 5aba7f9b moved to (3,1)
 
 zombies’ positions: 
 (1,1)(2,1)(3,2)(3,1)
 creatures’ positions: 
 none
+```
+
+### JSON formatted result
+```log
+Printing JSON formatted result
+{"zombieFinalPositions":[{"x":1,"y":1},{"x":2,"y":1},{"x":3,"y":2},{"x":3,"y":1}],"creatureFinalPositions":[]}
 ```
 
 ## Code coverage
@@ -131,7 +137,64 @@ Source code was formatted using [google-java-format](https://github.com/google/g
 
 ## Application design and some design decisions
 
-### IGrid
+### Zombie ID
+Every Zombie gets assigned an ID during it's life cycle. This ID is used to uniquely identify a zombie making it easy to track the path a zombie took.
+
+The logic to derive the ZombieId is as follows
+```log
+UUID.randomUUID().toString().split("-")[0]
+```
+```log
+Zombie 5cef994a moved to (0,1)
+Zombie 5cef994a infected creature at (0,1)
+Zombie 5cef994a moved to (0,2)
+Zombie 5cef994a moved to (1,2)
+Zombie 5cef994a infected creature at (1,2)
+Zombie 5cef994a moved to (1,1)
+Zombie 5cef994a infected creature at (1,1)
+
+```
+
+### [Request](src/main/java/au/com/ailo/zombie/apocalypse/types/Request.java)
+This is the request object which is the input to the system. [request.json](request.json) deserializes to this.
+```java
+public class Request {
+
+  private String moves;
+
+  private int gridSize;
+
+  private Coordinate initialZombiePosition;
+
+  private List<Coordinate> initialCreaturePosition;
+}
+```
+
+### [Direction](src/main/java/au/com/ailo/zombie/apocalypse/types/Direction.java)
+R, L, U & D are represented as Direction enum.
+```java
+public enum Direction {
+  RIGHT("R"),
+  LEFT("L"),
+  UP("U"),
+  DOWN("D")
+}
+```
+
+### [Coordinate](src/main/java/au/com/ailo/zombie/apocalypse/types/Coordinate.java)
+X and Y axis are represented as coordinates.
+
+```java
+public class Coordinate {
+  private int x;
+  private int y;
+}
+```
+
+### [InputDispatcher](src/main/java/au/com/ailo/zombie/apocalypse/input/InputDispatcher.java)
+The input dispatcher, takes the raw input as command-line args, validates it and dispatches it off to the RequestHandler
+
+### [IGrid](src/main/java/au/com/ailo/zombie/apocalypse/types/IGrid.java)
 This is the Grid Interface which provides a bunch of operations that makes it possible to interact with the grid.
 ```java
 public interface IGrid {
